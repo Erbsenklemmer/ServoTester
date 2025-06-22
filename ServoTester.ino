@@ -27,14 +27,6 @@ void setup() {
 
   
 
-  // display.begin(SSD1306_SWITCHCAPVCC, 60);
-
-  // display.setTextColor(WHITE);
-
-  // display.clearDisplay();
-
-  // display.fillRect(10, 10, 20, 55, WHITE);
-
   display.begin();
   display.setFontDirection(0);
   display.setFontRefHeightExtendedText();
@@ -58,41 +50,42 @@ void loop() {
   // put your main code here, to run repeatedly:
   encoder.tick();
   button.update();
-  //display.clearBuffer();
+
+
   //display draw something
   //display.updateDisplayArea(x, y, w, h);
 
   if (encoder.valueChanged()) {
     Serial.println(encoder.getValue());
   }
-  if (encoder.buttonChanged())
-  {
-    Serial.print("ENCODER button state: ");
-    Serial.println(encoder.getButton() == LOW ? "pressed" : "released");
-  }
-  // if (button.changed())  // do we have a new button state?
-  // {
-  //   Serial.print("button state: ");
-  //   Serial.println(button.isPressed() == LOW ? "pressed" : "released");
-  //   Serial.print("previous duration: ");
-  //   Serial.println(button.previousDuration());
-  // }
 
+  int pressedState = 0;
   if (button.changed())
   {
     if (button.isPressed() != LOW)
     {
-      if (button.previousDuration() < BUTTON_HOLD)
+      if (button.previousDuration() < BUTTON_HOLD) {
         Serial.println("Short klick");
-      else
+        pressedState = 1;
+      }
+      else {
         Serial.println("Long klick");
+        pressedState = 2;
+      }
     }
-    // else
-    //   Serial.println("Start pressing");
+    else
+      Serial.println("Start pressing");
+    Serial.print("Pressed: ");
+    Serial.println(pressedState);
   }
 
+  // display.clearBuffer();
+  // display.drawStr(60, 0, "drawFrame");
+  // display.drawFrame(65, 10, 20, 10);
+
+  // display.sendBuffer();
   // Serial.print("Hallo3 ");
   // Serial.println(count);
   // count++;
-  // delay(250);
+   //delay(0);
 }
