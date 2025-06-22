@@ -14,6 +14,8 @@ int count(0);
 EncoderTool::PolledEncoder encoder;
 Bounce2::Button button;
 
+#define BUTTON_HOLD 1000
+
 void setup() {
   Serial.begin(9600);
 
@@ -68,12 +70,25 @@ void loop() {
     Serial.print("ENCODER button state: ");
     Serial.println(encoder.getButton() == LOW ? "pressed" : "released");
   }
-  if (button.changed())  // do we have a new button state?
+  // if (button.changed())  // do we have a new button state?
+  // {
+  //   Serial.print("button state: ");
+  //   Serial.println(button.isPressed() == LOW ? "pressed" : "released");
+  //   Serial.print("previous duration: ");
+  //   Serial.println(button.previousDuration());
+  // }
+
+  if (button.changed())
   {
-    Serial.print("button state: ");
-    Serial.println(button.isPressed() == LOW ? "pressed" : "released");
-    Serial.print("previous duration: ");
-    Serial.println(button.previousDuration());
+    if (button.isPressed() != LOW)
+    {
+      if (button.previousDuration() < BUTTON_HOLD)
+        Serial.println("Short klick");
+      else
+        Serial.println("Long klick");
+    }
+    // else
+    //   Serial.println("Start pressing");
   }
 
   // Serial.print("Hallo3 ");
